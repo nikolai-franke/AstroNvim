@@ -12,6 +12,22 @@ cmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
   callback = function() astronvim.set_url_match() end,
 })
 
+augroup("auto_quit", { clear = true })
+cmd("BufEnter", {
+  desc = "Quit AstroNvim if more than one window is open and only sidebar windows are list",
+  group = "auto_quit",
+  callback = function()
+    local num_wins = #vim.api.nvim_list_wins()
+    local sidebar_fts = { "aerial", "neo-tree" }
+    local sidebars = {}
+    vim.tbl_map(function(bufnr)
+      local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+      if vim.tbl_contains(sidebar_fts, ft) then sidebars[ft] = true end
+    end, vim.api.nvim_list_bufs())
+    if num_wins > 1 and vim.tbl_count(sidebars) == num_wins then vim.cmd "quit" end
+  end,
+})
+
 if is_available "alpha-nvim" then
   augroup("alpha_settings", { clear = true })
   if is_available "bufferline.nvim" then
@@ -103,6 +119,7 @@ cmd({ "VimEnter", "ColorScheme" }, {
   end,
 })
 
-create_command("AstroUpdate", astronvim.updater.update, { desc = "Update AstroNvim" })
-create_command("AstroVersion", astronvim.updater.version, { desc = "Check AstroNvim Version" })
+create_command("AstroUpdate", function() astronvim.updater.update() end, { desc = "Update AstroNvim" })
+create_command("AstroReload", function() astronvim.updater.reload() end, { desc = "Reload AstroNvim" })
+create_command("AstroVersion", function() astronvim.updater.version() end, { desc = "Check AstroNvim Version" })
 create_command("ToggleHighlightURL", astronvim.toggle_url_match, { desc = "Toggle URL Highlights" })
