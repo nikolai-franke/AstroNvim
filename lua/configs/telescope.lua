@@ -91,5 +91,9 @@ telescope.setup(astronvim.user_plugin_opts("plugins.telescope", {
     },
   },
   pickers = {},
-  extensions = {},
+  extensions = {
+    ['zoxide'] = telescope.load_extension('zoxide'),
+    ['fzy-native'] = telescope.load_extension('fzy_native'),
+  },
 }))
+-- telescope.load_extension('zoxide')

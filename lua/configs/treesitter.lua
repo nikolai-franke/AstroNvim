@@ -6,7 +6,7 @@ treesitter.setup(astronvim.user_plugin_opts("plugins.treesitter", {
   ignore_install = {},
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = true,
   },
   context_commentstring = {
     enable = true,
